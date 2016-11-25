@@ -1,0 +1,523 @@
+#include <cstdlib>	//Pause
+#include <conio.h>
+#include <iostream> //cin cout
+using namespace std;
+
+int randomx=0,randomy=0,randomid, randomab, randomhv;
+								//X   Y			/*y*/
+int cpumoc/*CPU Matriz Oceanica*/[10][10];//{/*x*/{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+int cpumob/*CPU Matriz Objetivos*/[10][10];//{{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+int usemoc/*User Matriz Oceanica*/[10][10];//{{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+int usemob/*User Matriz Objetivos*/[10][10];//{{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0}};
+int x /*Números*/,y /*Letras*/,tamano,z,mentira=0,ya,yano;
+int cpuwin, usewin; //Contador de gane
+int i			,j;
+int flag=0;
+char Y;
+//int cinco,cuatro,tresa,tresb,dos;//Naves //Para detectar mentiras //Para eliminar opciones si es que hay una cruz de x*x donde x es el valor de la nave mayor en pie y sus menores destruidas
+int respuesta,respuestb,respuestc;
+char numerosaletras(int);
+
+
+
+int main(){
+	for(x=0;x<=9;x++){
+		for(y=0;y<=9;y++){
+			cpumoc[x][y]=0;
+			cpumob[x][y]=0;
+			usemoc[x][y]=0;
+			usemob[x][y]=0;
+		}
+	}
+	/*for(y=0;y<=9;y++){
+		for(x=0;x<=9;x++){
+			cout<<cpumoc[x][y]<<"\t";
+		}
+		cout<<endl;
+	}*/
+	//Colocar naves en la matriz oceanica
+	for(tamano=5;tamano>=2;tamano--){ //Tamaño de la nave
+		tres:
+		randomab=2;
+		randomid=2;
+		randomhv=2;
+		randomx=rand()/100%10+0; //Random del 1 al 10
+		randomy=rand()/100%10+0; //Random del 1 al 10
+		cout<<endl<<"X\tY"<<endl;
+		cout<<randomx+1<<"\t"<<randomy+1<<endl<<"x= "<<tamano<<endl;
+		if(randomx<tamano){//Si es menor que el tama;o del barco
+			randomid=1;		//a la derecha
+		}
+		if(randomx>10-tamano){
+			randomid=0;
+		}
+		if(randomy<tamano){
+			randomab=1;
+		}		
+		if(randomy>10-tamano){
+			randomab=0;
+		}
+		if(randomab==2){
+			randomab=rand()/100%2;
+		}
+		if(randomid==2){
+			randomid=rand()/100%2;
+		}
+		randomhv=rand()/100%2;
+		cout<<"id\tab\thv"<<endl<<randomid<<"\t"<<randomab<<"\t"<<randomhv<<endl;
+		if(randomhv==0){//En horizontal
+			if(randomid==0){
+				for(x=randomx;x>randomx-tamano;x--){
+					if(cpumoc[x][randomy]!=0){
+						goto tres;
+					}
+				}
+				for(x=randomx;x>randomx-tamano;x--){
+					cpumoc[x][randomy]=tamano;
+					cout<<"Entre y los valores en x son"<<x<<endl;
+				}
+			}
+			if(randomid==1){//Hacia la derecha
+				for(x=randomx;x<randomx+tamano;x++){
+					if(cpumoc[x][randomy]!=0){
+						goto tres;
+					}
+				}
+				for(x=randomx;x<randomx+tamano;x++){//Sirve
+					cpumoc[x][randomy]=tamano;
+				}
+			}
+		}
+		if(randomhv==1){//En vertical
+			if(randomab==0){//hacia arriba
+				for(y=randomy;y>randomy-tamano;y--){
+					if(cpumoc[randomx][y]!=0){
+						goto tres;
+					}
+				}
+				for(y=randomy;y>randomy-tamano;y--){
+					cpumoc[randomx][y]=tamano;
+				}
+			}
+			if(randomab==1){//habia abajo
+				for(y=randomy;y<randomy+tamano;y++){
+					if(cpumoc[randomx][y]!=0){
+						goto tres;
+					}
+				}
+				for(y=randomy;y<randomy+tamano;y++){
+					cpumoc[randomx][y]=tamano;
+				}
+			}
+		}
+		if(tamano==3){			
+			if(flag==0){
+				flag=1;
+				goto tres;
+			}
+		}
+	}
+	
+	
+	inicio:
+	system("CLS");
+	//Mostrar matriz de objetivos de la CPU
+	cout<<endl<<"Matriz de objetivos CPU"<<endl;
+	cout<<"\t";
+	for(x=1;x<=10;x++){
+		cout<<x<<"\t";
+	}	
+	cout<<endl;
+	for(y=0;y<=9;y++){ 
+		//Int to Char 0 to A
+		cout<<numerosaletras(y)<<"\t";
+		for(x=0;x<=9;x++){
+
+			cout<<cpumob[x][y]<<"\t";
+		}
+		cout<<endl;
+	}
+	//Mostrar matriz oceanica de la CPU(matriz objetivos user)
+	cout<<endl<<"Tu matriz de objetivos"<<endl;
+	cout<<"\t";
+	for(x=1;x<=10;x++){
+		cout<<x<<"\t";
+	}	
+	cout<<endl;
+	for(y=0;y<=9;y++){ 
+		cout<<numerosaletras(y)<<"\t";
+		for(x=0;x<=9;x++){
+			if(cpumoc[x][y]==2||cpumoc[x][y]==3||cpumoc[x][y]==4||cpumoc[x][y]==5){
+				cout<<"0\t";
+			}
+			else if(cpumoc[x][y]>10){
+				cout<<cpumoc[x][y]-10<<"\t";
+			}
+			else{
+				cout<<cpumoc[x][y]<<"\t";
+			}
+		}
+		cout<<endl;
+	}
+	
+	//Valores de la cuadrícula de objetivos
+	//0 libre
+	//1 fallo
+	//2 acierto
+	//3 nave hundida
+	int flag=0;
+	for(y=0;y<=9;y++){ 
+		for(x=0;x<=9;x++){//Viaja por toda la matriz
+			//sumax:
+			if(cpumob[x][y]==2){//Encuentra un acierto
+				flag=1;
+				yano=0;
+				if(cpumob[x-1][y]==0&&cpumob[x+1][y]==0&&cpumob[x][y+1]==0&&cpumob[x][y-1]==0){//libre a sus 4 lados
+					otra:
+					randomhv=rand()/100%2;
+					if(randomhv==0){
+						randomx=(rand()/100%3+1) + (x-2);//Valor random de x-1 o x+1
+						if(randomx==x){
+							goto otra;
+						}
+					}
+					if(randomhv==1){
+						randomy=(rand()/100%3+1) + (y-2);//Valor random de y-1 o y+1
+						if(randomy==y){
+							goto otra;
+						}
+					}
+					if(randomx<0||randomy<0){
+						goto otra;
+					}
+				}
+				if(cpumob[x-1][y]==2||cpumob[x+1][y]==2||cpumob[x][y+1]==2||cpumob[x][y-1]==2){ //Un acierto a un lado
+					yano=1;
+					//cpumobxy
+					if(cpumob[x+1][y]==2){//Lado derecho, izquierdo imposible
+						for(i=x;i<=x+4;i++){
+							if(cpumob[i+1][y]==0&&i<9){
+								j=i;
+								i=100;
+								break;
+							}
+						}
+						//xy a jy
+						if(x-1<0){
+							randomid=1;
+						}
+						else if(j+1>9){
+							randomid=0;
+						}
+						else{
+							randomid=rand()/100%2;
+						}
+						cout<<"El randomid tiene un valor de "<<randomid<<endl;
+						randomy=y;
+						cout<<"Este es la coordenada de tu primer 2 "<<numerosaletras(y)<<x+1<<endl<<"Este es la coordenada de tu ultimo 2 "<<numerosaletras(y)<<j+1<<endl<<"Y se va a ir a la\t";
+						if(randomid==0){
+							if(cpumob[x-1][y]==0){
+								randomx=x-1;
+								//randomy=y;
+								cout<<"izquierda"<<endl;
+							}
+						}
+						else /*if(randomid==1)*/{
+							if(cpumob[j+1][y]==0){
+								randomx=j+1;
+								cout<<"derecha"<<endl;
+							}
+							else{
+							cout<<endl<<"MENTIROSO!!, ya lo había destruido perdiste"<<endl;
+							system("PAUSE");
+							return EXIT_SUCCESS;
+							}
+						}
+					}
+					
+					if(cpumob[x][y+1]==2){//Abajo, arriba imposible
+						for(j=y;j<=y+4;j++){
+							if(cpumob[x][j+1]==0&&j<9){
+								i=j;
+								j=100;
+								break;
+							}
+						}
+						//xy a xi
+						if(y-1<0){
+							randomab=0;
+						}
+						else if(i+1>9){
+							randomab=1;
+						}
+						else{
+							randomab=rand()/100%2;
+						}
+						cout<<"El randomid tiene un valor de "<<randomab<<endl;
+						randomx=x;
+						cout<<"Este es la coordenada de tu primer 2 "<<y<<numerosaletras(y)<<x+1<<endl<<"Este es la coordenada de tu ultimo 2 "<<i<<numerosaletras(i)<<x+1<<endl<<"Y se va a ir a\t";
+						if(randomab==1){
+							if(cpumob[x][y-1]==0){
+								randomy=y-1;
+								//randomy=y;
+								cout<<"arriba"<<endl;
+							}
+						}
+						else /*if(randomid==1)*/{
+							if(cpumob[x][i+1]==0){
+								randomy=i+1;
+								cout<<"bajo"<<endl;
+							}
+							else{
+							cout<<endl<<"MENTIROSO!!, ya lo había destruido perdiste"<<endl;
+							system("PAUSE");
+							return EXIT_SUCCESS;
+							}
+						}
+					}	
+				}
+				else if(cpumob[x-1][y]!=0||cpumob[x+1][y]!=0||cpumob[x][y+1]!=0||cpumob[x][y-1]!=0){//El punto encontrado con algún no libre a un lado
+					otrb:
+					randomhv=rand()/100%2;
+					if(randomhv==0){
+						randomx=(rand()/100%3+1) + (x-2);//Valor random de x-1 o x+1
+						if(randomx==x){
+							goto otrb;
+						}
+					}
+					if(randomhv==1){
+						randomy=(rand()/100%3+1) + (y-2);//Valor random de y-1 o y+1
+						if(randomy==y){
+							goto otrb;
+						}
+					}
+					if(randomx<0||randomy<0||cpumob[randomx][randomy]!=0){
+						goto otrb;
+					}
+				}
+			x=100;
+			y=100;
+			}
+		}
+	}	
+	if(flag==0){
+		randomize:
+		randomx=rand()/100%10; //Random del 0 al 9
+		randomy=rand()/100%10; //Random del 0 al 9
+		cout<<randomy<<"\t"<<randomx<<endl<<(randomx+randomy)%2<<endl;
+		if((randomx+randomy)%2==1||cpumob[randomx][randomy]!=0){
+			goto randomize;
+		}
+	}
+	cout<<numerosaletras(randomy)<<randomx+1<<endl;
+	etiquetaacierto:
+	cout<<"¿Acerté? No = 0, sí = 1"<<endl;
+	cin>>respuesta;
+	if(respuesta<0||respuesta>1){
+		cout<<"No seas mentiroso."<<endl;
+		goto etiquetaacierto;
+	}
+	cpumob[randomx][randomy]=respuesta+1;
+	if(respuesta==1){
+		cout<<endl<<"¿Ya lo destruí? No = 0, sí = 1"<<endl;
+		cin>>respuestb;
+		if(respuestb==1){
+			etiquetatamano:
+			cout<<"¿De que tamaño era?"<<endl;
+			cin>>respuestc;
+			if(respuestc<2||respuestc>5){
+				cout<<"No seas mentiroso."<<endl;
+				mentira++;
+				if(mentira>5){
+					cout<<endl<<"Ya no quiero jugar contigo, eres muy mentiroso"<<endl;
+					system("PAUSE");
+					return EXIT_SUCCESS;
+				}
+				goto etiquetatamano;
+			}
+			ya=0;
+			tamano=0;//Inicializar tama;o
+			for(y=0;y<=9;y++){ 
+				for(x=0;x<=9;x++){
+					if(cpumob[x][y]==2){
+						for(z=x;z<=x+respuestc-1;z++){
+							if(cpumob[z][y]==2){ //Numero de aciertos consecutivos en x
+								tamano++;
+							}
+						}
+						if(tamano==respuestc){
+							ya=1;
+							for(z=x;z<=x+respuestc-1;z++){
+								cpumob[z][y]=3;
+							}
+						}
+						tamano=0;	
+					}
+				}
+			}
+			if(ya==0){
+				tamano=0;//Inicializar tama;o
+				for(x=0;x<=9;x++){ 
+					for(y=0;y<=9;y++){
+						if(cpumob[x][y]==2){
+							for(z=y;z<=y+respuestc-1;z++){
+								if(cpumob[x][z]==2){ //Numero de aciertos consecutivos en y
+									tamano++;
+								}
+							}
+							if(tamano==respuestc){
+								ya=1;
+								for(z=y;z<=y+respuestc-1;z++){
+									cpumob[x][z]=3;
+								}
+							}
+							tamano=0;
+						}
+					}
+				}
+				if(ya==0){
+					cout<<endl<<"MENTIROSO!!, no pude haber destruido un barco de tama;o: "<<respuestc<<", perdiste"<<endl;
+					system("PAUSE");
+					return EXIT_SUCCESS;
+				}
+			}		
+		}
+	}
+	//Turno del usuario
+	//0 Libre
+	//1 Fallo
+	//2 acierto
+	//10+x nave de tama;o x hundida
+	etiquetausuario:
+	cout<<"Mencione la coordenada empezando por la letra A-J seguido del número 1-10 "<<endl;
+	cin>>Y;
+	cin>>x;
+	if(x<1||x>10){
+		cout<<"El numero debe de estar dentro del rango"<<endl;
+		goto etiquetausuario;
+	}
+	x--;
+	if(Y=='A'){
+		y=0;
+	}
+	else if(Y=='B'){
+		y=1;
+	}
+	else if(Y=='C'){
+		y=2;
+	}
+	else if(Y=='D'){
+		y=3;
+	}
+	else if(Y=='E'){
+		y=4;
+	}
+	else if(Y=='F'){
+		y=5;
+	}
+	else if(Y=='G'){
+		y=6;
+	}
+	else if(Y=='H'){
+		y=7;
+	}
+	else if(Y=='I'){
+		y=8;
+	}
+	else if(Y=='J'){
+		y=9;
+	}
+	else{
+		cout<<"La letra debe de estar dentro del rango"<<endl;
+		goto etiquetausuario;
+	}
+	if(usemob[x][y]!=0){
+		cout<<"Ya dijiste esa coordenada"<<endl;
+		goto etiquetausuario;
+	}
+	
+	if(cpumoc[x][y]>1){
+		cout<<"Haz acertado"<<endl;
+		usemob[x][y]=2;
+		tamano=cpumoc[x][y];
+		cpumoc[x][y]=tamano+10;
+		
+		
+	}
+	else{
+		cout<<"Haz fallado"<<endl;
+		usemob[x][y]=1;
+		cpumoc[x][y]=1;
+	}
+	system("PAUSE");
+	//Declarar ganador
+	cpuwin=0;
+	for(y=0;y<=9;y++){
+		for(x=0;x<=9;x++){
+			if(cpumob[x][y]==3){
+				cpuwin++;
+				if(cpuwin==17){
+					cout<<"Perdiste"<<endl;
+						system("PAUSE");
+						return EXIT_SUCCESS;
+				}
+			}
+		}
+	}
+	usewin=0;
+	for(y=0;y<=9;y++){
+		for(x=0;x<=9;x++){
+			if(cpumoc[x][y]>10){
+				usewin++;
+				if(usewin==17){
+					cout<<"Ganaste"<<endl;
+						system("PAUSE");
+						return EXIT_SUCCESS;
+				}
+			}
+		}
+	}
+	goto inicio;
+
+
+
+	system("PAUSE");
+	return EXIT_SUCCESS;
+}
+
+
+char numerosaletras(int y) 
+{
+		//Int to Char 0 to A
+		if(y==0){
+			Y='A';
+		}
+		if(y==1){
+			Y='B';
+		}
+		if(y==2){
+			Y='C';
+		}
+		if(y==3){
+			Y='D';
+		}
+		if(y==4){
+			Y='E';
+		}
+		if(y==5){
+			Y='F';
+		}
+		if(y==6){
+			Y='G';
+		}
+		if(y==7){
+			Y='H';
+		}
+		if(y==8){
+			Y='I';
+		}
+		if(y==9){
+			Y='J';
+		}	
+	return Y;
+}
